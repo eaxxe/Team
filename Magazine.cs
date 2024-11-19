@@ -92,15 +92,27 @@ namespace Team
 
         public override string ToString()
         {
+            string stringName = "";
+            foreach (Article elem in article)
+                stringName += elem.Title + " ";
+            return ToShortString() +
+                $"List of articles : {stringName}\n";
+        }
+
+        public virtual string ToShortString()
+        {
+            string stringRate = "";
+            foreach (Article elem in article)
+                stringRate += elem.Rate + " ";
             return $"Name of magazine: {_name}\n" +
                 $"Date of publication: {_dateOfPublicationMagazine}\n" +
-                $"Magazine circulation: {_magazineCirculation}\n" +
-                $"List of articles : \n";
+                $"Magazine circulation: {_magazineCirculation}\n" + stringRate;
+
         }
 
         public void AddArticles(params Article[] articles)
         {
-            this.article = articles;
+            article = articles;
         }
     }
 }
