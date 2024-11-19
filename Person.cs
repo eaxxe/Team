@@ -1,4 +1,4 @@
-﻿namespace TeamProject
+﻿namespace Team
 {
     class Person
     {
