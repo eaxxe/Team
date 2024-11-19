@@ -1,6 +1,6 @@
 ﻿namespace Team
 {
-    internal class Article
+    class Article
     {
         private Person author;
         private string title;

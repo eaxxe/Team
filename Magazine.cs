@@ -1,12 +1,41 @@
-﻿namespace Team
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Team
 {
-    public class Magazine
+    class Magazine
     {
         private string? _name;
         private DateTime _dateOfPublicationMagazine;
         private int _magazineCirculation;
-        //Article[] articles;
-        //Frequency frequency;
+        private Article[] article;
+        private readonly Frequency frequency;
+
+        public double AverageRate
+        {
+            get
+            {
+                double avarageRate = 0;
+                foreach (var item in article)
+                {
+                    avarageRate += item.Rate;
+                }
+                return avarageRate / article.Length;
+            }
+        }
+
+        public bool this[Frequency index]
+        {
+            get
+            {
+                if (index == frequency)
+                    return true;
+                return false;
+            }
+        }
 
         public string Name
         {
@@ -38,11 +67,18 @@
             get => _magazineCirculation;
         }
 
-        public Magazine(string name, DateTime dateOfPublicationMagazine, int magazineCirculation)
+        public Frequency GetFrequency
+        {
+            get => frequency;
+        }
+
+        public Magazine(string name, DateTime dateOfPublicationMagazine, int magazineCirculation, Frequency frequency, Article[] articles)
         {
             Name = name;
             DateOfPublicationMagazine = dateOfPublicationMagazine;
             MagazineCirculation = magazineCirculation;
+            this.frequency = frequency;
+            article = articles;
         }
 
         public Magazine()
@@ -50,6 +86,8 @@
             _name = "Model";
             _dateOfPublicationMagazine = DateTime.Today;
             _magazineCirculation = 10000;
+            frequency = Frequency.Weekly;
+            article = new Article[1];
         }
 
         public override string ToString()
@@ -59,5 +97,11 @@
                 $"Magazine circulation: {_magazineCirculation}\n" +
                 $"List of articles : \n";
         }
+
+        public void AddArticles(params Article[] articles)
+        {
+            this.article = articles;
+        }
     }
 }
+
