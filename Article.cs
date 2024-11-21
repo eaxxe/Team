@@ -1,18 +1,16 @@
 ﻿namespace Team
 {
-    internal class Article
+    class Article
     {
         private Person author;
         private string title;
         private double rate;
-
         public Article()
         {
             author = new Person("Arseniy", "Serzhan", new DateTime(2006, 11, 14));
             title = "Minecumph";
             rate = 10;
         }
-
         public Article(Person _author, string _title, double _rate)
         {
             author = _author;

@@ -1,12 +1,13 @@
 ﻿namespace Team
 {
-    public class Magazine
+    class Magazine
     {
         private string? _name;
         private DateTime _dateOfPublicationMagazine;
         private int _magazineCirculation;
-        //Article[] articles;
-        //Frequency frequency;
+        Article[] articles;
+        Frequency frequency;
+        private Article srticle;   
 
         public string Name
         {
