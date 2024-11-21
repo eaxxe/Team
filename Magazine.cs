@@ -44,6 +44,7 @@ namespace Team
                 if (!string.IsNullOrEmpty(_name)) _name = value;
                 else throw new ArgumentException("The provided name is either empty or uninitialized.", nameof(value));
             }
+         
             get => _name ?? string.Empty;
         }
 
