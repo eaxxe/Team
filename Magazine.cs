@@ -89,6 +89,7 @@ namespace Team
             _magazineCirculation = 10000;
             frequency = Frequency.Weekly;
             article = new Article[1];
+            article[0] = new Article();
         }
 
         public override string ToString()
@@ -102,18 +103,29 @@ namespace Team
 
         public virtual string ToShortString()
         {
-            string stringRate = "";
-            foreach (Article elem in article)
-                stringRate += elem.Rate + " ";
             return $"Name of magazine: {_name}\n" +
                 $"Date of publication: {_dateOfPublicationMagazine}\n" +
-                $"Magazine circulation: {_magazineCirculation}\n" + stringRate;
+                $"Magazine circulation: {_magazineCirculation}\n" + 
+                $"Average rate: " + AverageRate + "\n";
 
         }
 
         public void AddArticles(params Article[] articles)
         {
-            article = articles;
+            if (article != null)
+            {
+                Article[] temp = new Article[articles.Length + article.Length];
+                Array.Copy(article, temp, article.Length);
+                Array.Copy(articles, 0, temp, article.Length, articles.Length);
+                article = temp;
+            }
+            else
+            {
+                Article[] temp = new Article[articles.Length];
+                Array.Copy(articles, temp, articles.Length);
+                article = temp;
+            }
+            
         }
     }
 }

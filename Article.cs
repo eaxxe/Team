@@ -2,9 +2,9 @@
 {
     class Article
     {
-        private Person author;
-        private string title;
-        private double rate;
+        public Person author { get; set; }
+        public string title { get; set; }
+        public double rate { get; set; }
         public Article()
         {
             author = new Person("Arseniy", "Serzhan", new DateTime(2006, 11, 14));
