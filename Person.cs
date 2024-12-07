@@ -64,6 +64,41 @@
             return ToShortString() + $"Birthday: {_birthday:dd.MM.yyyy)} \n";
         }
 
+        public override bool Equals(object? obj)
+        {
+            if (obj == null) return false;
+            else
+            {
+                Person? person = obj as Person;
+                if (_lastName == person?.LastName && _firstName == person?.FirstName && _birthday.Equals(person?.Birthday)) return true;
+                return false;
+            }
+        }
+
+        public static bool operator ==(Person left, Person right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Person left, Person right)
+        {
+            return left.Equals(right);
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 17;  
+            hash = (hash * 23) + FirstName.GetHashCode();
+            hash = (hash * 23) + LastName.GetHashCode();
+            hash = (hash * 23) + Birthday.GetHashCode();
+            return hash;
+        }
+
+        public object DeepCopy()
+        {
+            return new Person(FirstName, LastName, Birthday);
+        }
+
         public virtual string ToShortString()
         {
             return $"First name: {_firstName} \n" +
