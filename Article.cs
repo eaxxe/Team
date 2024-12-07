@@ -1,6 +1,9 @@
-﻿namespace Team
+﻿using System.Diagnostics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace Team
 {
-    class Article
+    class Article:IRateAndCopy
     {
         public Person author { get; set; }
         public string title { get; set; }
@@ -42,7 +45,6 @@
 
         public double Rate
         {
-            get => rate;
             set
             {
                 if (value >= 0 && value < 11) rate = value;
@@ -50,6 +52,15 @@
             }
         }
 
+        public virtual object DeepCopy()
+        {
+            return new Article(author, title, rate);
+        }
+
+        public double Rating
+        {
+            get { return rate; }
+        }
 
     }
 }
