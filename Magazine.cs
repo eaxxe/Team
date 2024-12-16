@@ -1,132 +1,120 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections;
 
 namespace Team
 {
-    class Magazine
+    public class Magazine : Edition, IRateAndCopy
     {
-        private string? _name;
-        private DateTime _dateOfPublicationMagazine;
-        private int _magazineCirculation;
-        private Article[] article;
-        private readonly Frequency frequency;
+        private Frequency frequency;
+        private ArrayList editors;
+        private ArrayList articles;
 
-        public double AverageRate
+        public Magazine(string name, DateTime dateOfPublication, int tirazh, Frequency frequency)
+            : base(name, dateOfPublication, tirazh)
         {
-            get
-            {
-                double avarageRate = 0;
-                foreach (var item in article)
-                {
-                    avarageRate += item.Rate;
-                }
-                return avarageRate / article.Length;
-            }
-        }
-
-        public bool this[Frequency index]
-        {
-            get
-            {
-                if (index == frequency)
-                    return true;
-                return false;
-            }
-        }
-
-        public string Name
-        {
-            set
-            {
-                if (!string.IsNullOrEmpty(_name)) _name = value;
-                else throw new ArgumentException("The provided name is either empty or uninitialized.", nameof(value));
-            }
-         
-            get => _name ?? string.Empty;
-        }
-
-        public DateTime DateOfPublicationMagazine
-        {
-            set
-            {
-                if (value != default) _dateOfPublicationMagazine = value;
-                else throw new ArgumentException("The provided date of publication is invalid.", nameof(value));
-            }
-            get => _dateOfPublicationMagazine;
-        }
-
-        public int MagazineCirculation
-        {
-            set
-            {
-                if (value > 0) _magazineCirculation = value;
-                else throw new ArgumentException("The provided circulation of magazine cannot be a negative or equals zero", nameof(value));
-            }
-            get => _magazineCirculation;
-        }
-
-        public Frequency GetFrequency
-        {
-            get => frequency;
-        }
-
-        public Magazine(string name, DateTime dateOfPublicationMagazine, int magazineCirculation, Frequency frequency, Article[] articles)
-        {
-            Name = name;
-            DateOfPublicationMagazine = dateOfPublicationMagazine;
-            MagazineCirculation = magazineCirculation;
             this.frequency = frequency;
-            article = articles;
+            editors = new ArrayList();
+            articles = new ArrayList();
         }
 
-        public Magazine()
+        public Magazine() : base("Default", DateTime.Today, 10000)
         {
-            _name = "Model";
-            _dateOfPublicationMagazine = DateTime.Today;
-            _magazineCirculation = 10000;
             frequency = Frequency.Weekly;
-            article = new Article[1];
-            article[0] = new Article();
+            editors = new ArrayList();
+            articles = new ArrayList();
+        }
+
+        public double Rating
+        {
+            get
+            {
+                if (articles.Count == 0) return 0;
+                double totalRate = 0;
+                foreach (Article article in articles)
+                {
+                    totalRate += article.Rating;
+                }
+                return totalRate / articles.Count;
+            }
+        }
+
+        public ArrayList Articles
+        {
+            get { return articles; }
+        }
+
+        public ArrayList Editors
+        {
+            get { return editors; }
+        }
+
+        public void AddArticles(params Article[] newArticles)
+        {
+            articles.AddRange(newArticles);
+        }
+
+        public void AddEditors(params Person[] newEditors)
+        {
+            editors.AddRange(newEditors);
         }
 
         public override string ToString()
         {
-            string stringName = "";
-            foreach (Article elem in article)
-                stringName += elem.Title + " ";
-            return ToShortString() +
-                $"List of articles : {stringName}\n";
+            string articlesList = "";
+            foreach (Article article in articles)
+                articlesList += article + "\n";
+
+            string editorsList = "";
+            foreach (Person editor in editors)
+                editorsList += editor + "\n";
+
+            return base.ToString() +
+                   $"\nПериодичность: {frequency}\nСредний рейтинг статей: {Rating}\n" +
+                   $"Список статей:\n{articlesList}\nСписок редакторов:\n{editorsList}";
         }
 
-        public virtual string ToShortString()
+        public string ToShortString()
         {
-            return $"Name of magazine: {_name}\n" +
-                $"Date of publication: {_dateOfPublicationMagazine}\n" +
-                $"Magazine circulation: {_magazineCirculation}\n" + 
-                $"Average rate: " + AverageRate + "\n";
-
+            return base.ToString() + $"\nПериодичность: {frequency}\nСредний рейтинг статей: {Rating}\n";
         }
 
-        public void AddArticles(params Article[] articles)
+        public override object DeepCopy()
         {
-            if (article != null)
+            Magazine copy = new Magazine(NameOfProduct, Date, Tirazh, frequency);
+            foreach (Person editor in editors)
+                copy.AddEditors((Person)editor.DeepCopy());
+            foreach (Article article in articles)
+                copy.AddArticles((Article)article.DeepCopy());
+            return copy;
+        }
+
+        public Edition Edition
+        {
+            get { return new Edition(NameOfProduct, Date, Tirazh); }
+            set
             {
-                Article[] temp = new Article[articles.Length + article.Length];
-                Array.Copy(article, temp, article.Length);
-                Array.Copy(articles, 0, temp, article.Length, articles.Length);
-                article = temp;
+                NameOfProduct = value.NameOfProduct;
+                Date = value.Date;
+                Tirazh = value.Tirazh;
             }
-            else
+        }
+
+        public IEnumerable ArticlesWithRatingAbove(double rating)
+        {
+            foreach (Article article in articles)
             {
-                Article[] temp = new Article[articles.Length];
-                Array.Copy(articles, temp, articles.Length);
-                article = temp;
+                if (article.Rating > rating)
+                    yield return article;
             }
-            
+        }
+
+        public IEnumerable ArticlesWithTitleContaining(string keyword)
+        {
+            foreach (Article article in articles)
+            {
+                if (article.Title.Contains(keyword, StringComparison.OrdinalIgnoreCase))
+                    yield return article;
+            }
         }
     }
 }
-

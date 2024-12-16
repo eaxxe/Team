@@ -1,19 +1,20 @@
-﻿using System.Diagnostics;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using System;
 
 namespace Team
 {
-    class Article:IRateAndCopy
+    public class Article : IRateAndCopy
     {
         public Person author { get; set; }
         public string title { get; set; }
         public double rate { get; set; }
+
         public Article()
         {
             author = new Person("Arseniy", "Serzhan", new DateTime(2006, 11, 14));
             title = "Minecumph";
             rate = 10;
         }
+
         public Article(Person _author, string _title, double _rate)
         {
             author = _author;
@@ -21,7 +22,10 @@ namespace Team
             rate = _rate;
         }
 
-        public override string ToString() { return $"Author - {author}, title of the book - {title},rating of the book - {rate}"; }
+        public override string ToString()
+        {
+            return $"Author - {author}, title of the book - {title}, rating of the book - {rate}";
+        }
 
         public Person Author
         {
@@ -29,7 +33,7 @@ namespace Team
             set
             {
                 if (value != null) author = value;
-                else throw new ArgumentException("The provide author is equals NULL");
+                else throw new ArgumentException("The provided author is NULL");
             }
         }
 
@@ -39,16 +43,17 @@ namespace Team
             set
             {
                 if (!string.IsNullOrEmpty(value)) title = value;
-                else throw new ArgumentException("The provide author is equals NULL");
+                else throw new ArgumentException("The provided title is NULL");
             }
         }
 
         public double Rate
         {
+            get => rate;
             set
             {
                 if (value >= 0 && value < 11) rate = value;
-                else throw new ArgumentException("The provide rating is lower then 0");
+                else throw new ArgumentException("The provided rating is invalid");
             }
         }
 
@@ -61,6 +66,5 @@ namespace Team
         {
             get { return rate; }
         }
-
     }
 }

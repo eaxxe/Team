@@ -1,6 +1,6 @@
 ﻿namespace Team
 {
-    class Person
+    public class Person
     {
         private string? _firstName;
         private string? _lastName;
